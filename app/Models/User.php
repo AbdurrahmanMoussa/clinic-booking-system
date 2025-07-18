@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 class User extends Authenticatable
 {
@@ -19,9 +20,17 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'role',
+        'specialty',
+        'clinic_address',
+        'phone_number',
+        'date_of_birth',
+        'health_card_number',
+        'gender'
     ];
 
     /**
@@ -52,10 +61,27 @@ class User extends Authenticatable
      */
     public function initials(): string
     {
-        return Str::of($this->name)
-            ->explode(' ')
-            ->take(2)
-            ->map(fn ($word) => Str::substr($word, 0, 1))
-            ->implode('');
+        return strtoupper(substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1));
+    }
+
+    public function patientAppointments()
+    {
+        return $this->hasMany(Appointment::class, "patient_id");
+    }
+    public function doctorAppointments()
+    {
+        return $this->hasMany(Appointment::class, "doctor_id");
+    }
+    public function timeslots()
+    {
+        return $this->hasMany(Timeslot::class, "doctor_id");
+    }
+    public function writtenPrescriptions()
+    {
+        return $this->hasMany(Prescription::class, "doctor_id");
+    }
+    public function receivedPrescriptions()
+    {
+        return $this->hasMany(Prescription::class, "patient_id");
     }
 }

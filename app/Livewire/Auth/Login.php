@@ -43,9 +43,16 @@ class Login extends Component
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
-    }
+        $user = Auth::user();
 
+        $route = match ($user->role) {
+            'doctor' => 'doctor.dashboard',
+            'patient' => 'patient.dashboard',
+            default => 'patient.dashboard',
+        };
+
+        $this->redirectIntended(default: route($route, absolute: false), navigate: true);
+    }
     /**
      * Ensure the authentication request is not rate limited.
      */
@@ -72,6 +79,6 @@ class Login extends Component
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->email) . '|' . request()->ip());
     }
 }

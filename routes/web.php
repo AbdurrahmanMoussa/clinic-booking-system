@@ -1,24 +1,38 @@
 <?php
 
-use App\Livewire\Settings\Appearance;
-use App\Livewire\Settings\Password;
-use App\Livewire\Settings\Profile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Patient\Dashboard as PatientDashboard;
+use App\Livewire\Doctor\Dashboard as DoctorDashboard;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::view('/', 'welcome');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
-Route::middleware(['auth'])->group(function () {
-    Route::redirect('settings', 'settings/profile');
-
-    Route::get('settings/profile', Profile::class)->name('settings.profile');
-    Route::get('settings/password', Password::class)->name('settings.password');
-    Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
+Route::middleware(['auth', 'verified', 'role:patient'])->group(function () {
+    Route::get('patient/dashboard', PatientDashboard::class)->name('patient.dashboard');
 });
 
-require __DIR__.'/auth.php';
+Route::middleware(['auth', 'verified', 'role:doctor'])->group(function () {
+    Route::get('doctor/dashboard', DoctorDashboard::class)->name('doctor.dashboard');
+});
+
+// Route::view('dashboard', 'dashboard')
+//     ->middleware(['auth', 'verified'])
+//     ->name('dashboard');
+
+Route::view('profile', 'profile')
+    ->middleware(['auth'])
+    ->name('profile');
+
+Route::get('/dashboard', function () {
+    $user = Auth::user();
+    return redirect()->route($user->role . '.dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+require __DIR__ . '/auth.php';
+
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+
+    return redirect('/login');
+})->name('logout');
