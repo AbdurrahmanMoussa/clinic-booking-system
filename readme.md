@@ -1,7 +1,11 @@
-### Abdul - Patient A Login Page, Color
+### Abdul - Patient Appointment page, Login Page, Color scheme,
 
 ### Roshan - Patient
 
-### Sifat -
+### Sifat - Doctor
 
 ## Black/Blue
+
+## Appointment page - steps necessary:
+
+##
