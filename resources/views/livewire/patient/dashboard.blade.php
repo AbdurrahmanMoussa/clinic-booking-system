@@ -3,7 +3,7 @@
     <x-dashboard-card
     title="View Appointments"
     icon="fas fa-calendar"
-    :route="route('patient.dashboard')"
+    :route="route('patient.create-appointment')"
     description="Check your upcoming and past appointments."
 />
 

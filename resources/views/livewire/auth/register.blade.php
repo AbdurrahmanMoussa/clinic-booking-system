@@ -15,9 +15,10 @@ new #[Layout('components.layouts.auth')] class extends Component {
     public string $password = '';
     public string $password_confirmation = '';
 
-    /**
-     * Handle an incoming registration request.
-     */
+    public string $date_of_birth = '';
+    public string $health_card_number = '';
+    public string $gender = '';
+
     public function register(): void
     {
         $validated = $this->validate([
@@ -25,17 +26,36 @@ new #[Layout('components.layouts.auth')] class extends Component {
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'date_of_birth' => ['required', 'date'],
+            'health_card_number' => ['required', 'string', 'unique:patient_profiles,health_card_number'],
+            'gender' => ['nullable', 'string'],
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
-        $validated['role']='patient';
-        event(new Registered(($user = User::create($validated))));
+        $validated['role'] = 'patient';
+
+        $user = User::create([
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => 'patient',
+            'phone_number' => $this->phone_number ?? null,
+        ]);
+
+        $user->patientProfile()->create([
+            'date_of_birth' => $validated['date_of_birth'],
+            'health_card_number' => $validated['health_card_number'],
+            'gender' => $validated['gender'],
+        ]);
+        event(new Registered($user));
 
         Auth::login($user);
 
         $this->redirectIntended(route('patient.dashboard', absolute: false), navigate: true);
     }
-}; ?>
+};
+?>
 
 <div class="flex flex-col gap-6">
     <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to create your account')" />
@@ -45,56 +65,36 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
     <form wire:submit="register" class="flex flex-col gap-6">
         <!-- Name -->
-        <flux:input
-            wire:model="first_name"
-            :label="__('First Name')"
-            type="text"
-            required
-            autofocus
-            autocomplete="first_name"
-            :placeholder="__('First name')"
-        />
-             <flux:input
-            wire:model="last_name"
-            :label="__('Last Name')"
-            type="text"
-            required
-            autofocus
-            autocomplete="last_name"
-            :placeholder="__('Last name')"
-        />
+        <flux:input wire:model="first_name" :label="__('First Name')" type="text" required autofocus
+            autocomplete="first_name" :placeholder="__('First name')" />
+        <flux:input wire:model="last_name" :label="__('Last Name')" type="text" required autocomplete="last_name"
+            :placeholder="__('Last name')" />
 
         <!-- Email Address -->
-        <flux:input
-            wire:model="email"
-            :label="__('Email address')"
-            type="email"
-            required
-            autocomplete="email"
-            placeholder="email@example.com"
-        />
+        <flux:input wire:model="email" :label="__('Email address')" type="email" required autocomplete="email"
+            placeholder="email@example.com" />
 
         <!-- Password -->
-        <flux:input
-            wire:model="password"
-            :label="__('Password')"
-            type="password"
-            required
-            autocomplete="new-password"
-            :placeholder="__('Password')"
-            viewable
-        />
+        <flux:input wire:model="password" :label="__('Password')" type="password" required autocomplete="new-password"
+            :placeholder="__('Password')" viewable />
 
         <!-- Confirm Password -->
-        <flux:input
-            wire:model="password_confirmation"
-            :label="__('Confirm password')"
-            type="password"
-            required
-            autocomplete="new-password"
-            :placeholder="__('Confirm password')"
-            viewable
-        />
+        <flux:input wire:model="password_confirmation" :label="__('Confirm password')" type="password" required
+            autocomplete="new-password" :placeholder="__('Confirm password')" viewable />
+
+        <!-- Health Card Number -->
+        <flux:input wire:model="phone_number" :label="__('Phone number')" type="phone" required
+            :placeholder="__('e.g. (613) 555-5555')" />
+        <!-- Date of Birth -->
+        <flux:input wire:model="date_of_birth" :label="__('Date of Birth')" type="date" required autocomplete="bday"
+            :placeholder="__('YYYY-MM-DD')" />
+
+        <!-- Health Card Number -->
+        <flux:input wire:model="health_card_number" :label="__('Health Card Number')" type="text" required
+            :placeholder="__('e.g., A123456789')" />
+
+        <!-- Gender -->
+        <flux:input wire:model="gender" :label="__('Gender')" type="text" :placeholder="__('Optional')" />
 
         <div class="flex items-center justify-end">
             <flux:button type="submit" variant="primary" class="w-full">

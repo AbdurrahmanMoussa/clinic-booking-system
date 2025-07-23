@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
-use App\Livewire\Patient\Dashboard as PatientDashboard;
 use App\Livewire\Doctor\Dashboard as DoctorDashboard;
+use App\Livewire\Patient\Dashboard as PatientDashboard;
+use App\Livewire\Patient\CreateAppointment;
 
 use App\Models\User;
 
@@ -16,6 +17,7 @@ require __DIR__ . '/auth.php';
 
 Route::middleware(['auth', 'verified', 'role:patient'])->group(function () {
     Route::get('patient/dashboard', PatientDashboard::class)->name('patient.dashboard');
+    Route::get('patient/createappointment', CreateAppointment::class)->name('patient.create-appointment');
 });
 
 Route::middleware(['auth', 'verified', 'role:doctor'])->group(function () {

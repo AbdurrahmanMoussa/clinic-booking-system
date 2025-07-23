@@ -21,13 +21,7 @@ return new class extends Migration
 
             $table->enum('role', ['doctor', 'patient']);
 
-            $table->string('specialty')->nullable();
-            $table->string('clinic_address')->nullable();
             $table->string('phone_number')->nullable();
-
-            $table->date('date_of_birth')->nullable();
-            $table->string('health_card_number')->nullable()->unique();
-            $table->string('gender')->nullable();
 
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
