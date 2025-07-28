@@ -4,10 +4,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Livewire\Doctor\Dashboard as DoctorDashboard;
+use App\Livewire\Patient\BookAppointmentCalendar;
 use App\Livewire\Patient\Dashboard as PatientDashboard;
-use App\Livewire\Patient\CreateAppointment;
+use App\Livewire\TimeslotList;
 
-use App\Models\User;
+
 
 Route::get('/dashboard', function () {
     $user = Auth::user();
@@ -17,7 +18,8 @@ require __DIR__ . '/auth.php';
 
 Route::middleware(['auth', 'verified', 'role:patient'])->group(function () {
     Route::get('patient/dashboard', PatientDashboard::class)->name('patient.dashboard');
-    Route::get('patient/createappointment', CreateAppointment::class)->name('patient.create-appointment');
+    Route::get('/appointments', BookAppointmentCalendar::class)->name('patient.book-appointment-calendar');
+    // Route::get('/appointments', TimeslotList::class)->name('patient.timeslot-list');
 });
 
 Route::middleware(['auth', 'verified', 'role:doctor'])->group(function () {

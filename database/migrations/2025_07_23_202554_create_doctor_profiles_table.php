@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('doctor_profiles', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->text('bio')->nullable();
             $table->string('specialty');
             $table->string('clinic_address')->nullable();
             $table->timestamps();
