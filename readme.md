@@ -6,18 +6,19 @@
 - Book Appointment Page (2 weeks)
 - Color Scheme Design
 - View Doctors
+- Update Appointment
+- Cancel Appointment
 
 **Roshan**
 - View Appointments
 - Upcoming Appointment Widget
 - Header / Navbar Design
-- Logo Design and Integration in Header
+- Logo Design and Integration in Header logo-- RAS
 
 **Sifat**
-- Update Appointment
-- Cancel Appointment
-- Login Page
-- Homepage
+
+- Login Page 
+- Homepage ✅
 
 **Additional Feature (Optional)**
 - Manage Prescriptions
@@ -27,8 +28,7 @@
 ### Doctor Dashboard
 
 **Abdul**
-- Reschedule Appointments
-- Cancel Appointments
+
 
 **Roshan**
 - View Scheduled Appointments
@@ -36,6 +36,7 @@
 
 **Sifat**
 - View Scheduled Patient Information
+- change and cancel appointment
 
 **Additional Feature (Optional)**
 - Manage Availability

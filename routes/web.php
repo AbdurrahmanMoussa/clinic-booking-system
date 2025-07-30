@@ -8,12 +8,11 @@ use App\Livewire\Patient\BookAppointmentCalendar;
 use App\Livewire\Patient\Dashboard as PatientDashboard;
 use App\Livewire\TimeslotList;
 
-
-
 Route::get('/dashboard', function () {
     $user = Auth::user();
     return redirect()->route($user->role . '.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
 require __DIR__ . '/auth.php';
 
 Route::middleware(['auth', 'verified', 'role:patient'])->group(function () {
@@ -41,5 +40,8 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/password', 'settings.password')->name('settings.password');
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 });
+
+
+Route::view('/contact', 'contact')->name('contact');
 
 require __DIR__ . '/auth.php';

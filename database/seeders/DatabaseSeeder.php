@@ -23,13 +23,13 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        // User::factory()->create([
-        //     'first_name' => 'Test',
-        //     'last_name' => 'Doctor',
-        //     'email' => 'doctor@test.com',
-        //     'password' => Hash::make('password'),
-        //     'role' => 'doctor'
-        // ]);
+        User::factory()->create([
+            'first_name' => 'Test',
+            'last_name' => 'Doctor',
+            'email' => 'doctor@test.com',
+            'password' => Hash::make('password'),
+            'role' => 'doctor'
+        ]);
         $user = User::create([
             'first_name' => 'Test',
             'last_name' => 'User',
