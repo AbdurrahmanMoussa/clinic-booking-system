@@ -20,8 +20,8 @@
             <nav class="flex items-center space-x-4">
                 <a href="#" class="text-gray-700 dark:text-gray-200 hover:text-blue-500 transition-colors">Services</a>
                 <a href="{{ route('contact') }}" class="text-gray-700 dark:text-gray-200 hover:text-blue-500 transition-colors">Contact Us</a>
-                <a href="{{ route('login') }}" class="text-blue-600 dark:text-blue-400 font-semibold hover:underline transition-colors">Login | Register</a>
-
+                <a href="{{ route('login') }}" class="text-blue-600 dark:text-blue-400 font-semibold hover:underline transition-colors">Login </a> <p>|</p>
+                <a href="{{ route('register') }}" class="text-blue-600 dark:text-blue-400 font-semibold hover:underline transition-colors">Register</a>
                 <!-- Theme Toggle -->
                 <button id="theme-toggle" class="text-gray-600 dark:text-gray-300 hover:text-blue-600 transition duration-300">
                     <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden transition-transform duration-300 transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">

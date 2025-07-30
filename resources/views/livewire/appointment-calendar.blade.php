@@ -23,7 +23,7 @@
             </div>
 
             @foreach ($this->calendarGrid as $week)
-                <div class="grid grid-cols-7 gap-1 text-center mb-1 justify-items-center">
+    <div class="grid grid-cols-7 gap-1 text-center mb-1 justify-items-center w-full max-w-md mx-auto">
                     @foreach ($week as $day)
                         @if ($day)
                             @php
@@ -31,14 +31,15 @@
                                 $isAvailable = in_array($dateString, $availableDates);
                                 $isSelected = $selectedDate === $dateString;
                             @endphp
-                            <div class="w-12 h-12 flex items-center justify-center rounded-full text-center
-                        {{ $isAvailable ? 'text-black hover:bg-blue-200 cursor-pointer' : 'text-gray-400' }}
-                        {{ $isSelected ? 'bg-blue-500 text-white' : '' }}"
-                                @if ($isAvailable) wire:click="selectDay({{ $day }})" @endif>
-                                {{ $day }}
-                            </div>
+                 <div class="w-8 h-8 flex items-center justify-center rounded-full text-center
+    text-sm leading-none
+    {{ $isAvailable ? 'text-black hover:bg-blue-200 cursor-pointer' : 'text-gray-400' }}
+    {{ $isSelected ? 'bg-blue-500 text-white' : '' }}"
+    @if ($isAvailable) wire:click="selectDay({{ $day }})" @endif>
+    {{ $day }}
+</div>
                         @else
-                            <div class="w-12 h-12"></div>
+                            <div class="w-8 h-8"></div>
                         @endif
                     @endforeach
                 </div>
