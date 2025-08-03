@@ -3,9 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\Appointment;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Timeslot;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\Attributes\Computed;
 
 class TimeslotList extends Component
 {
@@ -13,19 +14,33 @@ class TimeslotList extends Component
     public ?string $date = null;
     public ?int $selectedTimeslotId = null;
 
-    public function selectTimeslot($id)
+    public function selectTimeslot($id): void
     {
         $this->selectedTimeslotId = $id;
     }
 
-    public function getAlreadyBookedProperty()
+    #[Computed]
+    public function alreadyBooked(): bool
     {
-        return \App\Models\Appointment::where('patient_id', Auth::id())
+        return Appointment::where('patient_id', Auth::id())
             ->where('status', 'scheduled')
             ->exists();
     }
 
-    public function bookAppointment()
+    #[Computed]
+    public function currentTimeslots()
+    {
+        if (!$this->doctorId || !$this->date) {
+            return collect();
+        }
+
+        return Timeslot::where('doctor_id', $this->doctorId)
+            ->whereDate('start_time', $this->date)
+            ->orderBy('start_time')
+            ->get();
+    }
+
+    public function bookAppointment(): void
     {
         $timeslot = Timeslot::findOrFail($this->selectedTimeslotId);
 
@@ -34,11 +49,7 @@ class TimeslotList extends Component
             return;
         }
 
-        $alreadyBooked = Appointment::where('patient_id', Auth::id())
-            ->where('status', 'scheduled')
-            ->exists();
-
-        if ($alreadyBooked) {
+        if ($this->alreadyBooked) {
             $this->addError('timeslot', 'You already have a scheduled appointment.');
             return;
         }
@@ -48,7 +59,7 @@ class TimeslotList extends Component
             'patient_id' => Auth::id(),
             'timeslot_id' => $timeslot->id,
             'status' => 'scheduled',
-            'notes' => null
+            'notes' => null,
         ]);
 
         $timeslot->update(['is_booked' => true]);
@@ -56,21 +67,9 @@ class TimeslotList extends Component
         session()->flash('success', 'Appointment booked successfully.');
         $this->redirect(route('patient.dashboard'));
     }
-    public function getCurrentTimeslotsProperty()
-    {
-        return Timeslot::where('doctor_id', $this->doctorId)
-            ->whereDate('start_time', $this->date)
-            ->orderBy('start_time')
-            ->get();
-    }
 
     public function render()
     {
-        $timeslots = Timeslot::where('doctor_id', $this->doctorId)
-            ->whereDate('start_time', $this->date)
-            ->orderBy('start_time')
-            ->get();
-
-        return view('livewire.timeslot-list', compact('timeslots'));
+        return view('livewire.timeslot-list');
     }
 }
