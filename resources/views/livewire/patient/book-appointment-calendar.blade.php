@@ -36,12 +36,26 @@
                 Time: {{ \Carbon\Carbon::parse($this->currentAppointment->timeslot->start_time)->format('g:i A') }}
             </p>
 
-            <div class="mt-4 flex gap-4">
-                <button wire:click="startUpdate"
-                    class="px-4 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-white transition">Update</button>
-                <button wire:click="cancelAppointment"
-                    class="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white transition">Cancel</button>
-            </div>
+            @if ($this->pendingAction)
+                <div
+                    class="p-4 mb-4 border rounded-lg bg-zinc-100 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700 shadow-sm">
+                    <p class="text-md font-black text-zinc-800 dark:text-zinc-100 mb-2">Are you sure you want to
+                        {{ $pendingAction }}? This will cancel your current appointment.</p>
+                    <div class="mt-4 flex gap-4">
+                        <button wire:click="confirmAction"
+                            class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white transition">Confirm</button>
+                        <button wire:click="cancelAction"
+                            class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white transition">Cancel</button>
+                    </div>
+                </div>
+            @else
+                <div class="mt-4 flex gap-4">
+                    <button wire:click="askConfirmation('update')"
+                        class="px-4 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-white transition">Update</button>
+                    <button wire:click="askConfirmation('cancel')"
+                        class="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white transition">Cancel</button>
+                </div>
+            @endif
         </div>
     @endif
 </div>

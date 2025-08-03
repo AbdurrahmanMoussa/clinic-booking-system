@@ -9,12 +9,16 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Reactive;
+
 
 class BookAppointmentCalendar extends Component
 {
     public $selectedDate = null;
     public $selectedDoctorId = null;
-    public $updating = null;
+    public $pendingAction = null;
+    public $pendingAppointmentId = null;
+    public $updating = false;
 
     protected $listeners = ['day-selected' => 'setDate'];
 
@@ -58,10 +62,32 @@ class BookAppointmentCalendar extends Component
             ->first();
     }
 
+    public function confirmAction()
+    {
+        if ($this->pendingAction == 'update') {
+            $this->startUpdate();
+        } elseif ($this->pendingAction == 'cancel') {
+            $this->cancelAppointment();
+        }
+    }
+
+    public function cancelAction()
+    {
+        $this->pendingAction = null;
+        $this->pendingAppointmentId = null;
+    }
+
+    public function askConfirmation($action)
+    {
+        $this->pendingAction = $action;
+        $this->pendingAppointmentId = $this->currentAppointment?->id;
+    }
+
     public function startUpdate()
     {
-        $this->cancelAppointment();
+        $this->selectedDoctorId = $this->currentAppointment()->doctor_id;
         $this->updating = true;
+        $this->cancelAppointment();
     }
     public function cancelAppointment()
     {
