@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\PatientProfile;
 use App\Models\User;
 use Carbon\Carbon;
+use CleanupAppointmentsSeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
