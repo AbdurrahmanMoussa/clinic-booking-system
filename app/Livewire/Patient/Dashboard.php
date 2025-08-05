@@ -12,12 +12,12 @@ class Dashboard extends Component
     {
         $userId = Auth::id();
 
-        $upcoming = \App\Models\Appointment::where('patient_id', $userId)
+        $upcoming = \App\Models\Appointment::with(['doctor', 'timeslot'])
+            ->where('patient_id', $userId)
             ->where('status', 'scheduled')
             ->whereHas('timeslot', function ($query) {
                 $query->where('start_time', '>=', now());
             })
-            ->with(['doctor', 'timeslot'])
             ->get()
             ->sortBy('timeslot.start_time')
             ->first();
