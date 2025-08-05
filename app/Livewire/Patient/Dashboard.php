@@ -12,14 +12,17 @@ class Dashboard extends Component
     {
         $userId = Auth::id();
 
-        $upcoming = \App\Models\Appointment::with(['doctor', 'timeslot'])
-            ->where('patient_id', $userId)
-            ->where('status', 'scheduled')
+        $upcoming = \App\Models\Appointment::where('patient_id', $userId)
             ->whereHas('timeslot', function ($query) {
                 $query->where('start_time', '>=', now());
             })
+            ->with(['doctor', 'timeslot'])
             ->get()
             ->sortBy('timeslot.start_time')
             ->first();
+
+        return view('livewire.patient.dashboard', [
+            'upcoming' => $upcoming
+        ]);
     }
 }
