@@ -1,5 +1,6 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 py-6">
 
+
     <x-dashboard-card title="View Appointments" :route="route('patient.book-appointment-calendar')"
         description="Check your upcoming and past appointments.">
 
@@ -40,6 +41,7 @@
                 \Carbon\Carbon::parse($upcoming->timeslot->start_time)->format('M d, h:i A')
             : 'No upcoming appointments'" />
     </div>
+
 
 
 
