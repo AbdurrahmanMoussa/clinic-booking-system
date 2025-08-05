@@ -20,13 +20,13 @@
         </svg>
     </x-dashboard-card>
 
-    <x-dashboard-card title="Medical History" icon='<i class="fas fa-notes-medical"></i>' :route="'#'"
+    <x-dashboard-card title="Medical History" icon='' :route="'#'"
         description="View your past diagnoses and prescription history." />
 
-    <x-dashboard-card title="Notifications" icon='<i class="fas fa-bell"></i>' :route="'#'"
+    <x-dashboard-card title="Notifications" icon='' :route="'#'"
         description="Stay updated with upcoming appointments and alerts." />
 
-    <x-dashboard-card title="Help Center" icon='<i class="fas fa-question-circle"></i>' :route="'#'"
+    <x-dashboard-card title="Help Center" icon='' :route="'#'"
         description="Need assistance? Access our help and support resources." />
 
 
@@ -34,7 +34,7 @@
 
     <div
         class="rounded-2xl border border-blue-600 bg-blue-950 hover:bg-blue-900 hover:shadow-xl hover:scale-[1.01] transition duration-300">
-        <x-dashboard-card title="Upcoming Appointment" icon="fas fa-stethoscope" :route="route('patient.book-appointment-calendar')" :description="$upcoming
+        <x-dashboard-card title="Upcoming Appointment" icon="" :route="route('patient.book-appointment-calendar')" :description="$upcoming
             ? 'Dr. ' .
                 $upcoming->doctor->last_name .
                 ' on ' .
