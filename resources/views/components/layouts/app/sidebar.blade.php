@@ -10,9 +10,8 @@
         class="border-e border-white bg-white dark:border-gray-700 dark:bg-gray-900 transition-colors duration-500">
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
-        {{ $role = auth()->user()->role }}
-        <a href="{{ route($role . '.dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse"
-            wire:navigate>
+        @php($role = auth()->user()->role)
+        <a href="/" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
             <x-app-logo />
         </a>
 

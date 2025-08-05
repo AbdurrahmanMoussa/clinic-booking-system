@@ -17,4 +17,8 @@ class Timeslot extends Model
     {
         return $this->belongsTo(User::class, 'doctor_id');
     }
+    public function appointment()
+    {
+        return $this->hasOne(Appointment::class);
+    }
 }

@@ -34,7 +34,7 @@ class TimeslotSeeder extends Seeder
                     }
                 }
 
-                $date->addDay();
+                $date = $date->copy()->addDay();
             }
         }
     }

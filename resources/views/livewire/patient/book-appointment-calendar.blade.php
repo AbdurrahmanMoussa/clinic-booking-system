@@ -1,23 +1,25 @@
 <div class="space-y-6">
-    <div>
-        <label for="doctor" class="block mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-100">Select a
-            Doctor:</label>
-        <select id="doctor" wire:model.live="selectedDoctorId"
-            class="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 p-2 transition">
-            <option value="">Select a doctor</option>
-            @foreach ($this->doctors as $doc)
-                <option value="{{ $doc->id }}">{{ $doc->first_name }} {{ $doc->last_name }}</option>
-            @endforeach
-        </select>
-    </div>
-
+    @if (!$this->currentAppointment)
+        <div>
+            <label for="doctor" class="block mb-2 text-sm font-medium text-zinc-800 dark:text-zinc-100">Select a
+                Doctor:</label>
+            <select id="doctor" wire:model.live="selectedDoctorId"
+                class="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 p-2 transition">
+                <option value="">Select a doctor</option>
+                @foreach ($this->doctors as $doc)
+                    <option value="{{ $doc->id }}">{{ $doc->first_name }} {{ $doc->last_name }}</option>
+                @endforeach
+            </select>
+        </div>
+    @endif
     @if ($selectedDoctorId || $updating)
         <livewire:appointment-calendar :doctor-id="$selectedDoctorId" :available-dates="$this->availableDates->toArray()" :selected-date="$selectedDate"
             wire:key="'calendar-'.$selectedDoctorId" />
     @endif
 
     @if ($selectedDoctorId && $selectedDate)
-        <livewire:timeslot-list :doctor-id="$selectedDoctorId" :date="$selectedDate" />
+        <livewire:timeslot-list :doctor-id="$selectedDoctorId" :date="$selectedDate"
+            wire:key="'timeslots-'.$selectedDoctorId.'-'.$selectedDate" />
     @endif
 
     @if ($this->currentAppointment)

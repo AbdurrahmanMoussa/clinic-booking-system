@@ -92,9 +92,14 @@ class BookAppointmentCalendar extends Component
     public function cancelAppointment()
     {
 
-        $appointment = Appointment::where('patient_id', Auth::id())->where('status', 'scheduled')->first();
+        $appointment = Appointment::where('patient_id', Auth::id())
+            ->where('status', 'scheduled')
+            ->first();
 
         if ($appointment) {
+
+            $appointment->timeslot->update(['is_booked' => false]);
+
             $appointment->status = 'cancelled';
             $appointment->save();
         }

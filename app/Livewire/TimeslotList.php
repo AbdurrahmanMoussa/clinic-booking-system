@@ -7,10 +7,12 @@ use App\Models\Timeslot;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\Reactive;
 
 class TimeslotList extends Component
 {
     public ?int $doctorId = null;
+    #[Reactive]
     public ?string $date = null;
     public ?int $selectedTimeslotId = null;
 
@@ -36,6 +38,7 @@ class TimeslotList extends Component
 
         return Timeslot::where('doctor_id', $this->doctorId)
             ->whereDate('start_time', $this->date)
+            ->where('is_booked', false)
             ->orderBy('start_time')
             ->get();
     }
@@ -64,7 +67,6 @@ class TimeslotList extends Component
 
         $timeslot->update(['is_booked' => true]);
 
-        session()->flash('success', 'Appointment booked successfully.');
         $this->redirect(route('patient.dashboard'));
     }
 
