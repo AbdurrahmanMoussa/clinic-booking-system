@@ -93,8 +93,20 @@ new #[Layout('components.layouts.auth')] class extends Component {
         <flux:input wire:model="health_card_number" :label="__('Health Card Number')" type="text" required
             :placeholder="__('e.g., A123456789')" />
 
-        <!-- Gender -->
-        <flux:input wire:model="gender" :label="__('Gender')" type="text" :placeholder="__('Optional')" />
+    <label for="gender" class="block text-sm font-medium text-gray-300">Gender</label>
+    <select 
+        id="gender" 
+        wire:model="gender"
+        class=" block w-full rounded-lg bg-zinc-800 border border-zinc-700 text-gray-300 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 text-sm px-4 py-2"
+    >
+        <option value="">Select Gender</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+        <option value="other">Other</option>
+    </select>
+
+
+
 
         <div class="flex items-center justify-end">
             <flux:button type="submit" variant="primary" class="w-full">

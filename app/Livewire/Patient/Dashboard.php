@@ -2,20 +2,28 @@
 
 namespace App\Livewire\Patient;
 
-use App\Models\User;
-
-
 use Livewire\Component;
+use App\Models\Appointment;
+use Illuminate\Support\Facades\Auth;
 
 class Dashboard extends Component
 {
+public function render()
+{
+    $userId = Auth::id();
 
-    public function user()
-    {
-        return User::where('role', 'patient')->get();
-    }
-    public function render()
-    {
-        return view('livewire.patient.dashboard');
-    }
+    $upcoming = \App\Models\Appointment::where('patient_id', $userId)
+        ->whereHas('timeslot', function ($query) {
+            $query->where('start_time', '>=', now());
+        })
+        ->with(['doctor', 'timeslot'])
+        ->get()
+        ->sortBy('timeslot.start_time')
+        ->first();
+
+    return view('livewire.patient.dashboard', [
+        'upcoming' => $upcoming
+    ]);
+}
+
 }

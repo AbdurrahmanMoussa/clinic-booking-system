@@ -9,27 +9,34 @@ use App\Livewire\Patient\BookAppointmentCalendar;
 use App\Livewire\Patient\Dashboard as PatientDashboard;
 use App\Livewire\TimeslotList;
 
+// Role-based redirect after login
 Route::get('/dashboard', function () {
     $user = Auth::user();
     return redirect()->route($user->role . '.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-require __DIR__ . '/auth.php';
-
+// Patient routes
 Route::middleware(['auth', 'verified', 'role:patient'])->group(function () {
     Route::get('patient/dashboard', PatientDashboard::class)->name('patient.dashboard');
-    Route::get('/appointments', BookAppointmentCalendar::class)->name('patient.book-appointment-calendar');
+    Route::get('appointments', BookAppointmentCalendar::class)->name('patient.book-appointment-calendar');
+    // Route::get('timeslots', TimeslotList::class)->name('patient.timeslot-list');
 });
 
+// Doctor routes
 Route::middleware(['auth', 'verified', 'role:doctor'])->group(function () {
     Route::get('doctor/dashboard', DoctorDashboard::class)->name('doctor.dashboard');
     Route::get('doctor/appointments', ViewAppointmentCalendar::class)->name('doctor.view-appointment-calendar');
 });
 
+// Public route
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Static pages
+Route::view('/contact', 'contact')->name('contact');
+
+// Volt settings routes
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
@@ -38,7 +45,5 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 });
 
-
-Route::view('/contact', 'contact')->name('contact');
-
+// Auth routes
 require __DIR__ . '/auth.php';
