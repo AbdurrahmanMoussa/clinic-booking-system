@@ -9,6 +9,7 @@
         </p>
     @else
         <ul class="space-x-2 grid lg:flex">
+
             @foreach ($this->currentTimeslots as $timeslot)
                 <li>
                     <button wire:click="selectTimeslot({{ $timeslot->id }})"
