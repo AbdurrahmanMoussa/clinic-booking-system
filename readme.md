@@ -1,42 +1,45 @@
-## Project Features Breakdown
+# Accounts, Seeding, and Usage
 
-### Patient Dashboard
+## Test Accounts
 
-**Abdul**
-- Book Appointment Page (2 weeks)
-- Color Scheme Design
-- View Doctors
-- Update Appointment
-- Cancel Appointment
+**Patient**
 
-**Roshan**
-- View Appointments
-- Upcoming Appointment Widget
-- Header / Navbar Design
-- Logo Design and Integration in Header logo-- RAS
+-   Email: `patient@test.com`
+-   Password: `password`
 
-**Sifat**
+**Doctors** (all passwords: `password`)
 
-- Login Page 
-- Homepage ✅
+-   `maya.patel@example.com`
+-   `lucas.chen@example.com`
+-   `amina.yusuf@example.com`
+-   `ethan.roy@example.com`
+-   `sofia.martinez@example.com`
 
-**Additional Feature (Optional)**
-- Manage Prescriptions
+## Setup Instructions
 
----
+From a fresh clone:
 
-### Doctor Dashboard
+## Install Dependencies
 
-**Abdul**
+```bash
+composer install
+npm install
+```
 
+## Configure Database and Seed
 
-**Roshan**
-- View Scheduled Appointments
-- Today's Upcoming Appointment Widget
+```bash
+cp .env.example .env
+php artisan key:generate
+php artisan migrate:fresh --seed
 
-**Sifat**
-- View Scheduled Patient Information
-- change and cancel appointment
+# Ensure all timeslots are seeded
+php artisan db:seed --class=TimeslotSeeder
+```
 
-**Additional Feature (Optional)**
-- Manage Availability
+## Run Application
+
+```bash
+php artisan serve
+npm run dev
+```
