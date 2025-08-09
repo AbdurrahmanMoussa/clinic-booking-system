@@ -1,4 +1,13 @@
 <div class="space-y-4">
+    @if ($errors->any())
+        <div
+            class="p-3 rounded border bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-700 text-red-700 dark:text-red-300 text-sm space-y-1">
+            @foreach ($errors->all() as $m)
+                <p>{{ $m }}</p>
+            @endforeach
+        </div>
+    @endif
+
     @if ($this->alreadyBooked)
         <p class="text-sm font-medium text-red-600 dark:text-red-400">
             You already have an appointment scheduled.

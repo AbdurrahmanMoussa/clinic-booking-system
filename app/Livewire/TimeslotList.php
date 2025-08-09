@@ -5,20 +5,26 @@ namespace App\Livewire;
 use App\Models\Appointment;
 use App\Models\Timeslot;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Reactive;
 
 class TimeslotList extends Component
 {
-    public ?int $doctorId = null;
-    #[Reactive]
-    public ?string $date = null;
+    #[Reactive] public ?int $doctorId = null;
+    #[Reactive] public ?string $date = null;
     public ?int $selectedTimeslotId = null;
+
+    protected array $rules = [
+        'doctorId'          => ['required', 'integer', 'exists:doctor_profiles,id'],
+        'date'              => ['required', 'date'],
+        'selectedTimeslotId' => ['required', 'integer', 'exists:timeslots,id'],
+    ];
 
     public function selectTimeslot($id): void
     {
-        $this->selectedTimeslotId = $id;
+        $this->selectedTimeslotId = (int) $id;
     }
 
     #[Computed]
@@ -32,9 +38,7 @@ class TimeslotList extends Component
     #[Computed]
     public function currentTimeslots()
     {
-        if (!$this->doctorId || !$this->date) {
-            return collect();
-        }
+        if (!$this->doctorId || !$this->date) return collect();
 
         return Timeslot::where('doctor_id', $this->doctorId)
             ->whereDate('start_time', $this->date)
@@ -45,6 +49,8 @@ class TimeslotList extends Component
 
     public function bookAppointment(): void
     {
+        $this->validate();
+
         $timeslot = Timeslot::findOrFail($this->selectedTimeslotId);
 
         if ($timeslot->is_booked) {
@@ -57,15 +63,26 @@ class TimeslotList extends Component
             return;
         }
 
-        Appointment::create([
-            'doctor_id' => $timeslot->doctor_id,
-            'patient_id' => Auth::id(),
-            'timeslot_id' => $timeslot->id,
-            'status' => 'scheduled',
-            'notes' => null,
-        ]);
+        DB::transaction(function () use ($timeslot) {
+            $taken = Appointment::where('timeslot_id', $timeslot->id)
+                ->where('status', 'scheduled')
+                ->lockForUpdate()
+                ->exists();
+            if ($taken) {
+                $this->addError('timeslot', 'This timeslot is no longer available.');
+                return;
+            }
 
-        $timeslot->update(['is_booked' => true]);
+            Appointment::create([
+                'doctor_id'   => $timeslot->doctor_id,
+                'patient_id'  => Auth::id(),
+                'timeslot_id' => $timeslot->id,
+                'status'      => 'scheduled',
+                'notes'       => null,
+            ]);
+
+            $timeslot->update(['is_booked' => true]);
+        });
 
         $this->redirect(route('patient.dashboard'));
     }
