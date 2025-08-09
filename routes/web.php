@@ -1,42 +1,40 @@
 <?php
 
+use App\Livewire\Doctor\AppointmentsList as DoctorAppointment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Livewire\Doctor\Dashboard as DoctorDashboard;
 use App\Livewire\Doctor\ViewAppointmentCalendar;
+use App\Livewire\DoctorsList;
+use App\Livewire\Patient\AppointmentsList as PatientAppointment;
 use App\Livewire\Patient\BookAppointmentCalendar;
 use App\Livewire\Patient\Dashboard as PatientDashboard;
-use App\Livewire\TimeslotList;
 
-// Role-based redirect after login
 Route::get('/dashboard', function () {
     $user = Auth::user();
     return redirect()->route($user->role . '.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Patient routes
 Route::middleware(['auth', 'verified', 'role:patient'])->group(function () {
     Route::get('patient/dashboard', PatientDashboard::class)->name('patient.dashboard');
-    Route::get('appointments', BookAppointmentCalendar::class)->name('patient.book-appointment-calendar');
-    // Route::get('timeslots', TimeslotList::class)->name('patient.timeslot-list');
+    Route::get('book-appointment', BookAppointmentCalendar::class)->name('patient.book-appointment-calendar');
+    Route::get('appointments', PatientAppointment::class)->name('patient.appointment-list');
 });
 
-// Doctor routes
 Route::middleware(['auth', 'verified', 'role:doctor'])->group(function () {
     Route::get('doctor/dashboard', DoctorDashboard::class)->name('doctor.dashboard');
-    Route::get('doctor/appointments', ViewAppointmentCalendar::class)->name('doctor.view-appointment-calendar');
+    Route::get('doctor/current-appointments', ViewAppointmentCalendar::class)->name('doctor.view-appointment-calendar');
+    Route::get('doctor/appointments/all', DoctorAppointment::class)
+        ->name('doctor.appointments-list');
 });
 
-// Public route
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// Static pages
 Route::view('/contact', 'contact')->name('contact');
-
-// Volt settings routes
+Route::get('/doctors', DoctorsList::class)->name('doctors-list');
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
@@ -45,5 +43,4 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 });
 
-// Auth routes
 require __DIR__ . '/auth.php';

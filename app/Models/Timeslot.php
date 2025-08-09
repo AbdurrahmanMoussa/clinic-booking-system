@@ -13,6 +13,11 @@ class Timeslot extends Model
         'is_booked',
     ];
 
+    protected $casts = [
+        'start_time' => 'datetime',
+        'end_time'   => 'datetime',
+    ];
+
     public function doctor()
     {
         return $this->belongsTo(User::class, 'doctor_id');

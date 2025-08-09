@@ -30,9 +30,9 @@ new class extends Component {
             <div class="mt-8 space-x-4">
                 <a href="{{ route('login') }}"
                     class="px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors inline-block">
-                    Book Appointment
+                    View Appointment Information
                 </a>
-                <a href="#"
+                <a href="contact"
                     class="px-6 py-3 border border-blue-600 text-blue-300 rounded hover:bg-blue-700 transition-colors inline-block">
                     Learn More
                 </a>
@@ -90,6 +90,7 @@ new class extends Component {
     </section>
 
     @include('partials.footer')
+    @fluxScripts
 </body>
 
 </html>

@@ -33,6 +33,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <span>Nepean, Ottawa, ON</span>
+                    <span>613-666-6666</span>
                 </div>
 
                 <div class="flex items-center space-x-4">

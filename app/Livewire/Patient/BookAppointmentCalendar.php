@@ -34,12 +34,19 @@ class BookAppointmentCalendar extends Component
             return collect();
         }
 
-        return Timeslot::where('doctor_id', $this->selectedDoctorId)
+        return Timeslot::query()
+            ->where('doctor_id', $this->selectedDoctorId)
+            ->where('start_time', '>=', now()->startOfDay())
+            ->where('is_booked', false)
+            ->whereDoesntHave('appointment', function ($q) {
+                $q->where('status', 'scheduled');
+            })
             ->pluck('start_time')
             ->map(fn($dt) => Carbon::parse($dt)->toDateString())
             ->unique()
             ->values();
     }
+
 
     #[Computed]
     public function doctors()
@@ -99,7 +106,6 @@ class BookAppointmentCalendar extends Component
         if ($appointment) {
 
             $appointment->timeslot->update(['is_booked' => false]);
-
             $appointment->status = 'cancelled';
             $appointment->save();
         }

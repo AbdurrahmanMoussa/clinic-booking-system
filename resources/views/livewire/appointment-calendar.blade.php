@@ -29,12 +29,13 @@
                         @if ($day)
                             @php
                                 $dateString = \Illuminate\Support\Carbon::create($year, $month, $day)->toDateString();
-                                $isAvailable = in_array($dateString, $availableDates);
-                                $isSelected = $selectedDate === $dateString;
+                                $isAvailable = in_array($dateString, $this->availableDates, true);
+                                $isSelected = $this->selectedDate === $dateString;
                             @endphp
+
                             <div class="w-9 h-9 flex items-center justify-center rounded-full
-                                    {{ $isAvailable ? 'cursor-pointer hover:bg-blue-200 dark:hover:bg-blue-700 text-zinc-900 dark:text-white' : 'text-zinc-400' }}
-                                    {{ $isSelected ? 'bg-blue-600 text-white' : '' }}"
+    {{ $isAvailable ? 'cursor-pointer hover:bg-blue-200 dark:hover:bg-blue-700 text-zinc-900 dark:text-white' : 'text-zinc-400' }}
+    {{ $isSelected ? 'bg-blue-600 text-white' : '' }}"
                                 @if ($isAvailable) wire:click="selectDay({{ $day }})" @endif>
                                 {{ $day }}
                             </div>

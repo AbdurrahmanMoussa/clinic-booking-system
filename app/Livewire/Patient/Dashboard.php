@@ -5,24 +5,46 @@ namespace App\Livewire\Patient;
 use Livewire\Component;
 use App\Models\Appointment;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 
 class Dashboard extends Component
 {
-       public function render()
-    {
-        $userId = Auth::id();
+    public $upcoming;
 
-        $upcoming = \App\Models\Appointment::where('patient_id', $userId)
-            ->whereHas('timeslot', function ($query) {
-                $query->where('start_time', '>=', now());
-            })
+    public $recentPast = [];
+    public function mount()
+    {
+        $this->upcoming = Appointment::where('patient_id', Auth::id())
+            ->where('status', 'scheduled')
+            ->whereHas(
+                'timeslot',
+                fn($q) =>
+                $q->where('start_time', '>=', now())
+                    ->where('is_booked', true)
+            )
             ->with(['doctor', 'timeslot'])
-            ->get()
-            ->sortBy('timeslot.start_time')
+            ->orderBy('id', 'desc')
             ->first();
 
-        return view('livewire.patient.dashboard', [
-            'upcoming' => $upcoming
-        ]);
+        $this->loadRecentPast();
+    }
+
+    public function loadRecentPast(): void
+    {
+        $this->recentPast = Appointment::where('patient_id', Auth::id())
+            ->whereHas('timeslot', fn($q) => $q->where('start_time', '<', now()))
+            ->with([
+                'doctor:id,last_name',
+                'timeslot:id,start_time',
+            ])
+            ->orderBy('id', 'desc')
+            ->take(3)
+            ->get();
+    }
+
+    public function render()
+    {
+
+        return view('livewire.patient.dashboard');
     }
 }
